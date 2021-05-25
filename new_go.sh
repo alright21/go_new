@@ -12,38 +12,46 @@ STEP=$(($STEP+1))
 
 read PROJECT_NAME
 
+echo
 echo "[Step $STEP] Creating a new folder named $PROJECT_NAME"
+echo
 STEP=$(($STEP+1))
 
 mkdir $PROJECT_NAME
 
 cd $PROJECT_NAME
 
+echo
 echo "[Step $STEP] Initialising Git repository"
+echo
 STEP=$(($STEP+1))
 
 git init
 
 git branch -M main
 
-echo "[Step $STEP] Insert remote repo name (HTTPS or SSH)"
+echo
+read -p "[Step $STEP] Do you want to set-up a remote repository to track this local repository? [y/n]" -n 1 -r IS_REMOTE
+echo 
+if [[ $IS_REMOTE =~ ^[Yy]$ ]]
+then 
+    echo "Insert remote repo name (HTTPS or SSH)"
+    echo
 
-read REMOTE_REPO
+    read REMOTE_REPO
 
-# if [ ($(echo $REMOTE_REPO | head -c 1) -neq "h" && $(echo $REMOTE_REPO | head -c 1) -neq "s") ]
-# if [[ ($REMOTE_REPO "https* || $REMOTE_REPO != ssh*) ]]
-# then
-#     echo "Not a valid remote repository"
-#     exit 1
-# fi
+    echo
+    echo "Adding remote repository"
+    echo
 
-echo "Adding remote repository"
+    STEP=$(($STEP+1))
 
-STEP=$(($STEP+1))
+    git remote add origin $REMOTE_REPO
+fi
 
-git remote add origin $REMOTE_REPO
-
+echo
 echo "[Step $STEP] Creating README.md file"
+echo
 
 STEP=$(($STEP+1))
 
@@ -59,14 +67,23 @@ func main(){
 
 }" > main.go
 
+echo
 echo "[Step $STEP] Initialising Go module file"
+echo
 
 STEP=$(($STEP+1))
 
-go mod init main.go
+go mod init $PROJECT_NAME
+
+echo
+echo "[Step $STEP] Creating Initial Commit"
+echo
 
 git add .
 
 git commit -m "feat(all): Initial commit"
 
-git push -u origin main
+if [[ $IS_REMOTE =~ ^[Yy]$ ]]
+then 
+    git push -u origin main
+fi
