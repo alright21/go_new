@@ -75,7 +75,7 @@ echo
 
 STEP=$(($STEP+1))
 
-MODULE_NAME="github.com/"+$GITHUB_USERNAME+"/"+$PROJECT_NAME
+MODULE_NAME="github.com/"$GITHUB_USERNAME"/"$PROJECT_NAME
 go mod init $MODULE_NAME
 
 echo
